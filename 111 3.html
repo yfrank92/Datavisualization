@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣外國工作者影響分析報告 2021–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --ink: #1a1814;
+  --ink2: #3d3a34;
+  --ink3: #6b6860;
+  --paper: #faf8f4;
+  --paper2: #f2efe8;
+  --paper3: #e8e4da;
+  --blue: #2c5f8a;
+  --blue2: #4a87b8;
+  --blue3: #d0e4f2;
+  --teal: #1d7a5f;
+  --teal2: #d0ede6;
+  --amber: #9a5e10;
+  --amber2: #f5e6cc;
+  --red: #8a2c2c;
+  --red2: #f2d0d0;
+  --gold: #c9973a;
+  --rule: rgba(26,24,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:15px}
+
+/* COVER */
+.cover{min-height:100vh;background:var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,.02) 60px,rgba(255,255,255,.02) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.02) 60px,rgba(255,255,255,.02) 61px)}
+.cover-tag{font-family:'Noto Sans TC',sans-serif;font-size:11px;font-weight:500;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:2rem;opacity:.9}
+.cover-title{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,6vw,4.5rem);color:#fff;line-height:1.1;margin-bottom:1rem;max-width:700px}
+.cover-title em{color:var(--gold);font-style:normal}
+.cover-sub{font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.1em;margin-bottom:3rem}
+.cover-team{font-size:20px;color:rgba(255,255,255,.5);letter-spacing:.1em;margin-bottom:3rem}
+.cover-stats{display:flex;gap:3rem;margin-top:2rem;flex-wrap:wrap;justify-content:center}
+.cover-stat{text-align:center}
+.cover-stat-n{font-family:'DM Serif Display',serif;font-size:2.5rem;color:var(--gold)}
+.cover-stat-l{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.1em;margin-top:4px}
+.cover-divider{width:60px;height:1px;background:var(--gold);opacity:.4;margin:2.5rem auto}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(250,248,244,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding:.75rem 0}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;display:flex;gap:1.5rem;align-items:center;overflow-x:auto}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:16px;color:var(--ink);white-space:nowrap;margin-right:1rem}
+.nav-link{font-size:16px;color:var(--ink3);text-decoration:none;white-space:nowrap;padding:4px 0;border-bottom:1.5px solid transparent;transition:all .2s}
+.nav-link:hover{color:var(--blue);border-color:var(--blue)}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+section{padding:5rem 0}
+section:nth-child(even){background:var(--paper2)}
+
+/* SECTION HEADERS */
+.sec-header{margin-bottom:3rem}
+.sec-num{font-size:11px;font-weight:500;letter-spacing:.2em;color:var(--blue);text-transform:uppercase;margin-bottom:.5rem}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);color:var(--ink);line-height:1.2;margin-bottom:1rem}
+.sec-desc{font-size:16px;color:var(--ink3);max-width:600px;line-height:1.8}
+.rule{width:40px;height:2px;background:var(--blue);margin-bottom:1.5rem}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2.5rem}
+.kpi{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.25rem 1.5rem;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--blue)}
+.kpi.teal::after{background:var(--teal)}
+.kpi.amber::after{background:var(--amber)}
+.kpi.red::after{background:var(--red)}
+.kpi-l{font-size:14px;color:var(--ink3);margin-bottom:.5rem;font-weight:500}
+.kpi-v{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--ink);line-height:1}
+.kpi-s{font-size:14px;color:var(--ink3);margin-top:.4rem}
+.kpi-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;margin-top:.5rem}
+.badge-up{background:var(--teal2);color:var(--teal)}
+.badge-dn{background:var(--red2);color:var(--red)}
+
+/* CHARTS */
+.chart-card{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.75rem;margin-bottom:1.5rem}
+.chart-title{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:.25rem}
+.chart-sub{font-size:14px;color:var(--ink3);margin-bottom:1.25rem}
+.chart-wrap{position:relative;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 4px;font-size:11px;color:var(--ink3)}
+.legend span{display:flex;align-items:center;gap:5px}
+.lsq{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+
+/* INSIGHT BOX */
+.insight{background:linear-gradient(135deg,var(--blue3),#e8f4fd);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:1rem 1.25rem;font-size:16px;color:var(--ink2);margin:1.25rem 0;line-height:1.7}
+.insight strong{color:var(--blue)}
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.insight-item{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1rem 1.25rem}
+.insight-item-icon{font-size:20px;margin-bottom:.5rem}
+.insight-item-title{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:.25rem}
+.insight-item-text{font-size:14px;color:var(--ink3);line-height:1.6}
+
+/* CONCLUSION */
+.conclusion{background:#f5f2ec;color:var(--ink);padding:5rem 0}
+.conclusion .sec-num{color:var(--blue)}
+.conclusion .sec-title{color:var(--ink)}
+.conclusion .sec-desc{color:var(--ink3)}
+.conclusion .rule{background:var(--blue)}
+.finding-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-top:2.5rem}
+.finding{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:box-shadow .2s}
+.finding:hover{box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.finding-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--blue);line-height:1;margin-bottom:.75rem}
+.finding-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:.6rem}
+.finding-text{font-size:15px;color:var(--ink2);line-height:1.8}
+
+/* FOOTER */
+footer{background:var(--ink2);border-top:1px solid var(--rule);padding:2rem 0;text-align:center;font-size:12px;color:rgba(255,255,255,.7)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;animation:fadeUp .6s ease forwards}
+.fade-up:nth-child(1){animation-delay:.1s}
+.fade-up:nth-child(2){animation-delay:.2s}
+.fade-up:nth-child(3){animation-delay:.3s}
+.fade-up:nth-child(4){animation-delay:.4s}
+
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:1rem}
+.data-table th{background:var(--paper2);padding:8px 12px;text-align:left;font-weight:500;font-size:11px;color:var(--ink3);border-bottom:1px solid var(--rule)}
+.data-table td{padding:8px 12px;border-bottom:1px solid var(--rule);color:var(--ink2)}
+.data-table tr:last-child td{border-bottom:none}
+.tag-six{background:var(--blue3);color:var(--blue);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500}
+.tag-non{background:var(--amber2);color:var(--amber);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500}
+.bar-inline{display:inline-block;height:6px;border-radius:3px;background:var(--blue);vertical-align:middle;margin-left:6px}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-tag">學術分析報告 · 2021–2025</div>
+  <h1 class="cover-title">台灣<em>外國工作者</em><br>影響分析</h1>
+  <div class="cover-sub">居留趨勢 · 經濟貢獻 · 犯罪樣態 · 六都差異</div>
+  <div class="cover-team">第二組<br>111213002呂恆毅、111213027周聖倫、111213032李宗霖、111213037李昱杰、111213039賴怡伶</div>
+  <div class="cover-divider"></div>
+  <div class="cover-stats">
+    <div class="cover-stat fade-up">
+      <div class="cover-stat-n">102.9萬</div>
+      <div class="cover-stat-l">2025年外僑人數</div>
+    </div>
+    <div class="cover-stat fade-up">
+      <div class="cover-stat-n">73.1%</div>
+      <div class="cover-stat-l">移工佔外僑比例</div>
+    </div>
+    <div class="cover-stat fade-up">
+      <div class="cover-stat-n">r=0.84</div>
+      <div class="cover-stat-l">外僑與GDP相關係數</div>
+    </div>
+    <div class="cover-stat fade-up">
+      <div class="cover-stat-n">0.38%</div>
+      <div class="cover-stat-l">每百外僑犯罪率</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">外國工作者分析</div>
+    <a href="#trend" class="nav-link">居留趨勢</a>
+    <a href="#city" class="nav-link">縣市分布</a>
+    <a href="#contribution" class="nav-link">經濟貢獻</a>
+
+    <a href="#crime" class="nav-link">犯罪分析</a>
+    <a href="#conclusion" class="nav-link">結論</a>
+  </div>
+</nav>
+
+<!-- SECTION 1: 居留趨勢 -->
+<section id="trend">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">Section 01</div>
+    <div class="rule"></div>
+    <h2 class="sec-title">外僑居留人數<br>五年趨勢</h2>
+    <p class="sec-desc">2021至2025年間，台灣外僑居留人數持續攀升，後疫情解封後成長明顯加速，反映台灣產業對國際人才的持續需求。</p>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi fade-up">
+      <div class="kpi-l">2025年外僑總人數</div>
+      <div class="kpi-v">102.9萬</div>
+      <div class="kpi-s">歷史最高紀錄</div>
+      <span class="kpi-badge badge-up">↑ +36.7% vs 2021</span>
+    </div>
+    <div class="kpi teal fade-up">
+      <div class="kpi-l">移工人數</div>
+      <div class="kpi-v">75.2萬</div>
+      <div class="kpi-s">佔外僑總數73.1%</div>
+      <span class="kpi-badge badge-up">↑ +26.3% vs 2021</span>
+    </div>
+    <div class="kpi amber fade-up">
+      <div class="kpi-l">疫情期年均成長</div>
+      <div class="kpi-v">+2.9%</div>
+      <div class="kpi-s">2021→2022邊境管制影響</div>
+    </div>
+    <div class="kpi fade-up">
+      <div class="kpi-l">後疫情年均成長</div>
+      <div class="kpi-v">+8.6%</div>
+      <div class="kpi-s">2023→2025快速反彈</div>
+      <span class="kpi-badge badge-up">成長加速3倍</span>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">外僑居留人數五年趨勢（2021–2025）</div>
+    <div class="chart-sub">含六都/非六都分群及移工人數對比，2023年為疫情分界線</div>
+    <div class="legend">
+      <span><span class="lsq" style="background:#2c5f8a"></span>六都外僑</span>
+      <span><span class="lsq" style="background:#9a5e10"></span>非六都外僑</span>
+      <span><span class="lsq" style="background:#1d7a5f;opacity:.6"></span>全國移工</span>
+    </div>
+    <div class='tableauPlaceholder' id='viz1776763943871' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet0&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet0' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet0&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776763943871');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>  </div>
+<div class='tableauPlaceholder' id='viz1776907926830' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;1_&#47;1_17766718298410&#47;sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='1_17766718298410&#47;sheet1' /><param name='tabs' value='yes' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;1_&#47;1_17766718298410&#47;sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776907926830');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+  <div class="insight">
+    <strong>疫情關鍵轉折點：</strong>2022年邊境管制期間外僑成長僅+5.8%，2023年解封後立即反彈至+6.9%，2024年更急速攀升至+11.3%，顯示台灣半導體及製造業擴張對外籍人力的強勁需求在疫情後迅速釋放。
+  </div>
+</div>
+</section>
+
+<!-- SECTION 2: 縣市分布 -->
+<section id="city" style="background:var(--paper2)">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">Section 02</div>
+    <div class="rule"></div>
+    <h2 class="sec-title">各縣市移工<br>分布與犯罪率</h2>
+    <p class="sec-desc">移工高度集中於工業密集縣市，但移工人數與犯罪率並非正相關<br>，打破普遍刻板印象。</p>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-card">
+      <div class="chart-title">各縣市移工人數排行（2025年）</div>
+      <div class="chart-sub">藍色=六都，橘色=非六都</div>
+      <div class='tableauPlaceholder' id='viz1776763996858' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776763996858');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>    </div>
+    <div class="chart-card">
+      <div class="chart-title">各縣市每百外僑犯罪率排行</div>
+      <div class="chart-sub">紅色≥0.6，橘色0.4–0.6，藍色＜0.4</div>
+      <div class='tableauPlaceholder' id='viz1776764021452' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764021452');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>    </div>
+  </div>
+
+  
+
+  <div class="chart-card" style="margin-top:1.5rem">
+    <div class="chart-title">移工人數 vs 每百外僑犯罪率散佈圖（2025年）</div>
+    <div class="chart-sub">泡泡大小代表外僑合計人數；藍色=六都，橘色=非六都</div>
+    <div class='tableauPlaceholder' id='viz1776764039368' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;vs&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;vs' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;vs&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764039368');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>  </div>
+	<div class="insight">
+    <strong>反直覺發現：</strong>桃園市移工人數全台最多（13.3萬人），每百外僑犯罪率僅0.287%，低於全國平均0.38%。臺南市移工人數排第五，犯罪率卻高達0.693%。<strong>移工人口規模與犯罪率無正相關</strong>，縣市管理品質與產業結構差異才是關鍵因素。
+  </div>
+</div>
+	
+</section>
+
+<!-- SECTION 3: 經濟貢獻 -->
+<section id="contribution">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">Section 03</div>
+    <div class="rule"></div>
+    <h2 class="sec-title">外國工作者的<br>正面經濟貢獻</h2>
+    <p class="sec-desc">外籍工作者不僅填補台灣產業缺工，更與台灣經濟成長呈高度正相關，是台灣競爭力的重要支柱。</p>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-card">
+      <div class="chart-title">外國專業人員各產業分布（2021–2025）</div>
+      <div class="chart-sub">製造業持續為最大雇主，後疫情各產業全面成長</div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#d0e4f2"></span>2021</span>
+        <span><span class="lsq" style="background:#2c5f8a"></span>2023</span>
+        <span><span class="lsq" style="background:#1d7a5f"></span>2025</span>
+      </div>
+      <div class='tableauPlaceholder' id='viz1776764057409' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet4&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet4' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet4&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764057409');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>    </div>
+    <div class="chart-card">
+      <div class="chart-title">外僑人數 vs 平均每人GDP（美元）</div>
+      <div class="chart-sub">相關係數 r=0.84，高度正相關</div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#2c5f8a"></span>外僑合計（萬人，左軸）</span>
+        <span><span class="lsq" style="background:#1d7a5f"></span>人均GDP（美元，右軸）</span>
+      </div>
+      <div class='tableauPlaceholder' id='viz1776764074988' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;vsGDP&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;vsGDP' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;vsGDP&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764074988');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight-item">
+      <div class="insight-item-icon">📈</div>
+      <div class="insight-item-title">經濟成長正相關</div>
+      <div class="insight-item-text">外僑人數與人均GDP相關係數r=0.84，2024–2025年兩者同步急速上升，顯示外籍工作者引進與台灣經濟擴張密切關聯。</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-item-icon">🏭</div>
+      <div class="insight-item-title">填補產業缺工</div>
+      <div class="insight-item-text">製造業外國專業人員5年增加29.5%，支撐半導體與電子產業持續擴張，為台灣出口競爭力提供關鍵人力。</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-item-icon">👴</div>
+      <div class="insight-item-title">長照缺口補位</div>
+      <div class="insight-item-text">外籍看護移工承擔台灣高齡化社會的照護需求，減緩家庭照護負擔，間接支持勞動人口持續工作。</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-item-icon">🎓</div>
+      <div class="insight-item-title">教育人才引進</div>
+      <div class="insight-item-text">外籍教師人數從9,126人（2021）增至10,522人（2025），提升台灣英語教育質量與國際化程度。</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">外僑成長率 vs 經濟成長率年度對比（2022–2025）</div>
+    <div class="chart-sub">2024–2025年外僑成長率與GDP成長率同步大幅提升</div>
+    <div class="legend">
+      <span><span class="lsq" style="background:#2c5f8a"></span>外僑人數成長率(%)</span>
+      <span><span class="lsq" style="background:#1d7a5f"></span>實質經濟成長率(%)</span>
+      <span><span class="lsq" style="background:#9a5e10"></span>人均GDP成長率(%)</span>
+    </div>
+    <div class='tableauPlaceholder' id='viz1776880651925' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet6&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet6' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet6&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776880651925');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script></div>
+</section>
+
+
+
+<!-- SECTION 5: 犯罪分析 -->
+<section id="crime">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">Section 04</div>
+    <div class="rule"></div>
+    <h2 class="sec-title">犯罪樣態深度分析<br>與疫情影響</h2>
+    <p class="sec-desc">超過100萬外僑中，99.62%守法居留。犯罪結構在疫情前後出現顯著變化，詐欺案件急速攀升值得關注。</p>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi fade-up">
+      <div class="kpi-l">五年總案件數</div>
+      <div class="kpi-v">13,945</div>
+      <div class="kpi-s">2021–2025年累計</div>
+    </div>
+    <div class="kpi teal fade-up">
+      <div class="kpi-l">守法居留率</div>
+      <div class="kpi-v">99.62%</div>
+      <div class="kpi-s">每百外僑僅0.38件</div>
+      <span class="kpi-badge badge-up">絕大多數守法</span>
+    </div>
+    <div class="kpi amber fade-up">
+      <div class="kpi-l">疫情後詐欺成長</div>
+      <div class="kpi-v">+55%</div>
+      <div class="kpi-s">與東南亞詐騙集團擴張相關</div>
+      <span class="kpi-badge badge-dn">需關注</span>
+    </div>
+    <div class="kpi red fade-up">
+      <div class="kpi-l">疫情期毒品案下降</div>
+      <div class="kpi-v">-30%</div>
+      <div class="kpi-s">疫情後持續下降趨勢</div>
+      <span class="kpi-badge badge-up">正面變化</span>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-card">
+      <div class="chart-title">犯罪類型疫情前後年均比較</div>
+      <div class="chart-sub">橘=疫情期年均(2021-22)，藍=後疫情年均(2023-25)</div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#8a2c2c"></span>疫情期年均</span>
+        <span><span class="lsq" style="background:#2c5f8a"></span>後疫情年均</span>
+      </div>
+      <div class='tableauPlaceholder' id='viz1776764217716' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet9&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet9' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet9&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764217716');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>    </div>
+    <div class="chart-card">
+      <div class="chart-title">外國人犯罪國籍分布（累計）</div>
+      <div class="chart-sub">越南籍佔49%，需搭配居留人數基數解讀</div>
+      <div class='tableauPlaceholder' id='viz1776764232869' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet10&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet10' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet10&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764232869');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">月份犯罪趨勢（2021–2025各年度）</div>
+    <div class="chart-sub">看不出月份有影響犯罪趨勢的關聯性</div>
+    <div class="legend">
+      <span><span class="lsq" style="background:#d0e4f2"></span>2021</span>
+      <span><span class="lsq" style="background:#4a87b8"></span>2022</span>
+      <span><span class="lsq" style="background:#2c5f8a"></span>2023</span>
+      <span><span class="lsq" style="background:#9a5e10"></span>2024</span>
+      <span><span class="lsq" style="background:#8a2c2c"></span>2025</span>
+    </div>
+    <div class='tableauPlaceholder' id='viz1776764249519' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet11&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='2_17767622641740&#47;sheet11' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;2_&#47;2_17767622641740&#47;sheet11&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-TW' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1776764249519');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>  </div>
+</div>
+</section>
+
+<!-- CONCLUSION -->
+<section class="conclusion" id="conclusion">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">結論</div>
+    <div class="rule"></div>
+    <h2 class="sec-title">主要發現與<br>政策建議</h2>
+    <p class="sec-desc">綜合五年資料分析，外國工作者對台灣的正面貢獻遠大於負面影響，但部分結構性問題仍需持續關注。</p>
+  </div>
+  <div class="finding-grid">
+    <div class="finding">
+      <div class="finding-num">01</div>
+      <div class="finding-title">外僑是台灣經濟成長的重要推手</div>
+      <div class="finding-text">外僑人數與人均GDP相關係數達0.84，後疫情期間兩者同步大幅成長，顯示外籍工作者在填補產業缺工、支撐經濟擴張方面扮演關鍵角色。</div>
+    </div>
+    <div class="finding">
+      <div class="finding-num">02</div>
+      <div class="finding-title">移工多不等於犯罪率高</div>
+      <div class="finding-text">桃園市移工人數全台最多，每百犯罪率卻低於全國平均。99.62%外僑守法居留，打破「移工帶來治安問題」的刻板印象。</div>
+    </div>
+    
+    <div class="finding">
+      <div class="finding-num">03</div>
+      <div class="finding-title">詐欺案件上升需重點關注</div>
+      <div class="finding-text">疫情後詐欺案件年均較疫情期增加55%，與跨境詐騙集團在東南亞快速擴張高度相關，建議加強兩岸及東南亞執法合作。</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  <p>台灣外國工作者影響分析報告 2021–2025 · 資料來源：移民署、警政署、主計總處、勞動部</p>
+</footer>
+
+
+</body>
+</html>
